@@ -28,14 +28,19 @@ import {filterImageFromURL, deleteLocalFiles} from './util/util';
       return res.status(400).send('Missing image_url query parameter');
     }
 
-    const exists = await urlExist(imageUrl);
-    if (!exists) {
-      return res.status(404).send("File not found");
-    }
-    const filteredImagePath = await filterImageFromURL(imageUrl);
+    try {
+      const exists = await urlExist(imageUrl);
+      if (!exists) {
+        return res.status(404).send("File not found");
+      }
+      const filteredImagePath = await filterImageFromURL(imageUrl);
 
-    return res.status(200).sendFile(filteredImagePath, 
-      () => deleteLocalFiles([filteredImagePath]));  
+      return res.status(200).sendFile(filteredImagePath, 
+        () => deleteLocalFiles([filteredImagePath]));  
+    } 
+    catch (error) {
+      return res.status(422).send('Not a valid image');
+    }
   });
   
   // Root Endpoint
