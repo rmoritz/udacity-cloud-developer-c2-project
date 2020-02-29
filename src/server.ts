@@ -1,4 +1,5 @@
 import express from 'express';
+import urlExist from 'url-exist';
 import { Request, Response } from 'express';
 import bodyParser from 'body-parser';
 import {filterImageFromURL, deleteLocalFiles} from './util/util';
@@ -26,11 +27,15 @@ import {filterImageFromURL, deleteLocalFiles} from './util/util';
     if (!imageUrl) {
       return res.status(400).send('Missing image_url query parameter');
     }
-    
+
+    const exists = await urlExist(imageUrl);
+    if (!exists) {
+      return res.status(404).send("File not found");
+    }
     const filteredImagePath = await filterImageFromURL(imageUrl);
 
     return res.status(200).sendFile(filteredImagePath, 
-      () => deleteLocalFiles([filteredImagePath]));
+      () => deleteLocalFiles([filteredImagePath]));  
   });
   
   // Root Endpoint
