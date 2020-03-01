@@ -1,17 +1,36 @@
 {
 	"info": {
-		"_postman_id": "4bcf1909-8996-44b7-be35-b130ab03d12f",
-		"name": "cloud-cdnd-c2-final",
+		"_postman_id": "e1b05772-c4d6-4c3d-bdc0-991e03f0638d",
+		"name": "image-filter",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
 		{
-			"name": "http://localhost:8082/filteredimage?image_url=https://timedotcom.files.wordpress.com/2019/03/kitten-report.jpg",
+			"name": "Non-image URL",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "c268ffce-cabf-4a0c-b974-6424fe67eecb",
+						"exec": [
+							"pm.test(\"Status code is 422\", function () {",
+							"    pm.response.to.have.status(422);",
+							"});",
+							"",
+							"pm.test(\"Body is 'Not a valid image'\", function () {",
+							"    pm.response.to.have.body(\"Not a valid image\");",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"request": {
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://{{HOST}}/filteredimage?image_url=https://timedotcom.files.wordpress.com/2019/03/kitten-report.jpg",
+					"raw": "http://{{HOST}}/filteredimage?image_url={{NOT_AN_IMAGE_URL}}",
 					"protocol": "http",
 					"host": [
 						"{{HOST}}"
@@ -22,7 +41,94 @@
 					"query": [
 						{
 							"key": "image_url",
-							"value": "https://timedotcom.files.wordpress.com/2019/03/kitten-report.jpg"
+							"value": "{{NOT_AN_IMAGE_URL}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Non-existent URL",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "e06055a8-d158-46a4-a096-10923f0d50c8",
+						"exec": [
+							"pm.test(\"Status code is 404\", function () {",
+							"    pm.response.to.have.status(404);",
+							"});",
+							"",
+							"pm.test(\"Body is 'File not found'\", function () {",
+							"    pm.response.to.have.body(\"File not found\");",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{HOST}}/filteredimage?image_url={{NOT_FOUND_URL}}",
+					"protocol": "http",
+					"host": [
+						"{{HOST}}"
+					],
+					"path": [
+						"filteredimage"
+					],
+					"query": [
+						{
+							"key": "image_url",
+							"value": "{{NOT_FOUND_URL}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "OK URL",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "4abb4c9d-cfe2-4831-be9a-f8865ba1c68b",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Content type is image/jpeg\", function() {",
+							"    pm.response.to.have.header('Content-Type');",
+							"    pm.expect(pm.response.headers.get('Content-Type')).to.equal('image/jpeg');",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{HOST}}/filteredimage?image_url={{OK_URL}}",
+					"protocol": "http",
+					"host": [
+						"{{HOST}}"
+					],
+					"path": [
+						"filteredimage"
+					],
+					"query": [
+						{
+							"key": "image_url",
+							"value": "{{OK_URL}}"
 						}
 					]
 				}
@@ -54,10 +160,29 @@
 	],
 	"variable": [
 		{
-			"id": "1df3d31a-de30-494b-a3d0-f1228dd8713c",
+			"id": "f6aef763-bb8a-4430-abe4-0ede9ff44830",
 			"key": "HOST",
 			"value": "localhost:8082",
 			"type": "string"
+		},
+		{
+			"id": "3471896c-fed4-4049-acaa-de4f58356b27",
+			"key": "NOT_AN_IMAGE_URL",
+			"value": "https://raw.githubusercontent.com/rmoritz/udacity-cloud-developer-image-filter-project/master/README.md",
+			"type": "string"
+		},
+		{
+			"id": "edb4394e-bf1e-4f7f-a422-523c94c301f8",
+			"key": "NOT_FOUND_URL",
+			"value": "http://foo.bar",
+			"type": "string"
+		},
+		{
+			"id": "647912f0-c3fe-4757-8b45-6ed931a5bc98",
+			"key": "OK_URL",
+			"value": "https://lh3.googleusercontent.com/9VFTvwYkFRqcwQ1JYYIRFJfo6k89TQ7OK4dKn3crz_rk0eFeKflxFfrF_DN-7x8LTDK_tU_kqPaJGzzbwmLq1Y3bdM10Ji7qxoyp8uAbFAbdNznEd_Vg28oID-KQ83d75ZnRJKdZ6_ARd-9sG_1m6__APHVyeMNeAXksTdN6T6FwajBaRgroK_lSbCmxHRvbjMoHe9pbdieZxEFf8sYWQiYb4WtfYrV7H6TekO4td7b8Gus_YoaOyz3TMKZ4R9Iln_MAuTnvN3fvJKqxzRcvNb1-dTPAZ0lIvFFVeycrN1PiKXbRI9QgNOIEzscRGglwRfuBfIBdezJUM4g9ggh0JW0PThBvkHp5HQ8z7C0Dvp-rAx-AwR-ZkiGmT0owaofY2_5KVXyapG92luj8ffRjGwIONrogNAs130hhkgW4TbVmiK5LB1yqgKJzoiC_fiG-UwR1y8XsMVR5NOLQ8NhklijEtXC8bLtjXbxD1XNKSfAVX5Dv3hmplr-cNYvIJPDrPovsMGYy0n8jj-Uo2V9Q_ZTQFmnuCmOtX528G71mOwktLKdF2PZ-pkdufVoUCYmI68BoGa3e6MRhK42RzlE3ZvpXxT3r5jR34HRDoTed8toigtpdXwVqY9XxWwSAOEpHznZMFXpZWrAHBO3X9DBtitOvL-oKm-LZ7ELTK9LSa2w_TPt5rrc5QP-u_-KR7lPsfc7d-2T7pUrD7DgT7ikHcyGKTdxgkB9fBszeMwr-c3aLewmqYA=w456-h607-no",
+			"type": "string"
 		}
-	]
+	],
+	"protocolProfileBehavior": {}
 }
