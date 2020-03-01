@@ -1,24 +1,26 @@
 {
-  "name": "udacity-c2-image-filter",
+  "name": "cloud-developer-image-filter-project",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Udagram image filtering microservice",
+  "main": "src/server.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node .",
+    "dev": "ts-node-dev --respawn --transpileOnly ./src/server.ts",
+    "prod": "tsc && node ./www/server.js",
     "clean": "rm -rf www/ || true",
-    "build": "npm run clean && tsc && cp package.json www/package.json && mkdir www/tmp/ && cd www && zip -r Archive.zip . && cd ..",
-    "dev": "ts-node-dev --respawn --transpileOnly ./src/server.ts"
+    "build": "npm run clean && tsc && cp .npmrc package.json www/ && cd www/ && zip -r Archive.zip . && cd ..",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/grutt/udacity-c2-image-filter.git"
+    "url": "git+https://github.com/rmoritz/udacity-cloud-developer-image-filter-project.git"
   },
-  "author": "",
+  "author": "Ralph Moeritz",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/grutt/udacity-c2-image-filter/issues"
+    "url": "https://github.com/rmoritz/udacity-cloud-developer-image-filter-project/issues"
   },
-  "homepage": "https://github.com/grutt/udacity-c2-image-filter#readme",
+  "homepage": "https://github.com/rmoritz/udacity-cloud-developer-image-filter-project#readme",
   "devDependencies": {
     "@types/bluebird": "^3.5.27",
     "@types/express": "^4.17.0",
@@ -29,6 +31,7 @@
   },
   "dependencies": {
     "express": "^4.17.1",
-    "jimp": "^0.6.4"
+    "jimp": "^0.6.4",
+    "url-exist": "^2.0.0"
   }
 }
